@@ -5,7 +5,7 @@ import json
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
-
+# TODO You were working on fixing `limit`
 pd.set_option('display.width', None)
 # api_key = '33430961257a61d00efd2cadbeaedfeb'
 api_key = 'F0E551BF-744B-4490-A465-B6A8B6EF0966'
@@ -14,6 +14,7 @@ ticker = 'BTC'
 
 start = datetime.date(2019, 4, 1)
 end = datetime.date(2021, 5, 27)
+
 
 def get_close_data(ticker: str, start: datetime, end: datetime, api_key: str):
     # Date range of the request
@@ -39,7 +40,7 @@ def get_close_data(ticker: str, start: datetime, end: datetime, api_key: str):
     # excess_time = df.iloc[:, :3]
     # df = df.iloc[:, 3:]
     # Only retrieving the Closing Price
-    df = pd.DataFrame(df.iloc[:,-1])
+    df = pd.DataFrame(df.iloc[:, -1])
     return df
 
 
@@ -47,4 +48,3 @@ if __name__ == '__main__':
     df = get_close_data(ticker, start, end, api_key)
 
     print(df)
-
