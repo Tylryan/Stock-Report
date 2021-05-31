@@ -1,4 +1,5 @@
 #!/usr/bin/python3.8
+import read_config
 import requests
 from pprint import pprint
 import json
@@ -7,8 +8,14 @@ import matplotlib.pyplot as plt
 import datetime
 pd.set_option('display.width', None)
 
-ticker = 'BTC'
+# TODO You were working on being able to collect data from more than one ticker at a time
 
+env_location = '../../Data/.env'
+user_name, password, crypto_api = read_config.export_variables(
+    env_location)
+
+# ticker = 'BTC'
+tickers = ['BTC', 'ETH']
 
 start = datetime.date(2019, 4, 1)
 end = datetime.date(2021, 5, 27)
@@ -43,22 +50,29 @@ def get_close_data(
     return df
 
 
+data = pd.DataFrame()
+
+for ticker in tickers:
+    df = pd.DataFrame(get_close_data(ticker, start, end, crypto_api))
+    data[ticker] = df['Close']
+
+    # df.set_index('Date', inplace=True)
+    # pd.concat([data, df], axis='column', join='inner')
+print(data)
+
+
 def get_existing_data():
     df = pd.read_csv('test.csv', parse_dates=True)
     return df
 
 
-if __name__ == '__main__':
-    # API Request
+# if __name__ == '__main__':
+    #     # API Request
 
-    # import read_config
-    # env_location = '../../Data/.env'
-    # user_name, password, crypto_api = read_config.export_variables(
-    #     env_location)
     # df = get_close_data(ticker, start, end, crypto_api)
-    # df.to_csv('test.csv', sep=',', index=False)
-    # print(df)
+#     df.to_csv('test.csv', sep=',', index=False)
+#     print(df)
 
     # Messing with the data
-    df = get_existing_data()
-    print(df)
+    # df = get_existing_data()
+    # print(df)
