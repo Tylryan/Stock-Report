@@ -40,13 +40,13 @@ if __name__ == "__main__":
 
     long_df = long_period_df(ticker)
     long_close = only_close(long_df)
-    short_df = short_period_df(ticker)
+    short_df = short_period_df(ticker, interval='5m')
     short_close = only_close(short_df)
 
-    print(f"\nThis is {ticker}'s 2y historical data\n")
-    print(long_df)
-    print(f"\nThis is {ticker}'s 2y historical data only close\n")
-    print(long_close)
+    # print(f"\nThis is {ticker}'s 2y historical data\n")
+    # print(long_df)
+    # print(f"\nThis is {ticker}'s 2y historical data only close\n")
+    # print(long_close)
     print(f"\nThis is {ticker}'s 60d historical data\n")
     print(short_df)
     print(f"\nThis is {ticker}'s 60d historical data only close\n")
