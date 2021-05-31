@@ -8,11 +8,14 @@ env_location = '../../Data/.env'
 
 
 def export_variables(env_location='../Data/.env'):
-    load_dotenv(env_location)
-    username = os.getenv('USERNAME')
-    password = os.getenv('PASSWORD')
-
-    return username, password
+    try:
+        load_dotenv(env_location)
+        username = os.getenv('USERNAME')
+        password = os.getenv('PASSWORD')
+        crypto_api = os.getenv('CRYPTO_API')
+        return username, password, crypto_api
+    except Exception as e:
+        print(f"Error: {e}")
 
 
 if __name__ == "__main__":
