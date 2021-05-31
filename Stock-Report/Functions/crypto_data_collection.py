@@ -5,46 +5,60 @@ import json
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
-# TODO You were working on fixing `limit`
 pd.set_option('display.width', None)
-# api_key = '33430961257a61d00efd2cadbeaedfeb'
-api_key = 'F0E551BF-744B-4490-A465-B6A8B6EF0966'
 
 ticker = 'BTC'
+
 
 start = datetime.date(2019, 4, 1)
 end = datetime.date(2021, 5, 27)
 
 
-def get_close_data(ticker: str, start: datetime, end: datetime, api_key: str):
+def get_close_data(
+        ticker: str,
+        start: datetime,
+        end: datetime,
+        api_key: str,
+        interval: int = '1DAY'
+):
     # Date range of the request
     limit = str(end - start).split()[0]
-    # Converting an easy datetime format to the required format
-    start_converted = str(start) + 'T00:00'
-    end_converted = str(start) + 'T00:00'
-
-    # What increments would you like to see
+    # Distance between ticks
     interval = '1DAY'
     url = f'https://rest.coinapi.io/v1/exchangerate/{ticker}/USD/history?period_id={interval}&time_start={start}&time_end={end}&limit={limit}'
     # Authenticating the request
     headers = {'X-CoinAPI-Key': api_key}
     # Requesting the data
     response = requests.get(url, headers=headers).json()
-    print(response)
-    # Turning that data into a dataframe
+    # Turning response to a dataframe
     df = pd.DataFrame(response)
-    # # df['time_close'] = pd.to_datetime(df['time_close'], format="%Y-%m-%d")
+    # Changing the column name to 'Date' for easier use
     df['Date'] = df['time_close']
-    df.set_index('Date', inplace=True)
+    # Renaming the rate_close column to 'Close'
+    df['Close'] = df['rate_close']
+    # Only Retrieve the Date and Close Columns
+    df = df[['Date', 'Close']]
+    # Only Show Year Month Day
+    df['Date'] = pd.to_datetime(df['Date'].str[:10])
+    return df
 
-    # excess_time = df.iloc[:, :3]
-    # df = df.iloc[:, 3:]
-    # Only retrieving the Closing Price
-    df = pd.DataFrame(df.iloc[:, -1])
+
+def get_existing_data():
+    df = pd.read_csv('test.csv', parse_dates=True)
     return df
 
 
 if __name__ == '__main__':
-    df = get_close_data(ticker, start, end, api_key)
+    # API Request
 
+    # import read_config
+    # env_location = '../../Data/.env'
+    # user_name, password, crypto_api = read_config.export_variables(
+    #     env_location)
+    # df = get_close_data(ticker, start, end, crypto_api)
+    # df.to_csv('test.csv', sep=',', index=False)
+    # print(df)
+
+    # Messing with the data
+    df = get_existing_data()
     print(df)
