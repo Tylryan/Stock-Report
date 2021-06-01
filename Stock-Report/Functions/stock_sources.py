@@ -3,6 +3,7 @@
 import yfinance as yf
 import pandas as pd
 from time import sleep
+import numpy as np
 
 # you will need to have data for at least 2 years to find the 50day moving average and the 100 day moving average.
 
@@ -31,8 +32,43 @@ def short_period_df(ticker, period='60d', interval='1h', threads=True):
 
 
 def only_close(df):
-    df = df['Close']
+    df = pd.DataFrame(df['Close'])
     return df
+
+
+def returns(df):
+
+    df1 = df.copy()
+    # Set the short window and long windows
+    # 40,80 works best so far.
+    short_sma = 40
+    long_sma = 80
+
+    df1[f"{short_sma} SMA"] = df1.Close.rolling(short_sma).mean()
+    df1[f"{long_sma} SMA"] = df1.Close.rolling(long_sma).mean()
+
+    df1['Position'] = np.where(
+        df1[f'{short_sma} SMA'] > df1[f'{long_sma} SMA'], 1, -1)
+
+    df1['Buy and Hold Return'] = np.log(df1['Close'] / df1['Close'].shift(1))
+
+    df1['Strategy Return'] = df1.Position.shift(1) * df1['Buy and Hold Return']
+    df1 = df1[['Buy and Hold Return', 'Strategy Return']]
+
+    returns = df1[['Buy and Hold Return', 'Strategy Return']
+                  ].sum().apply(np.exp) * 1000
+    return df1, returns
+
+# Plots the cumulative returns.
+
+
+def historic_cumulative_returns(df):
+    df['Buy and Hold Cumulative Return'] = df['Buy and Hold Return'].cumsum().apply(
+        np.exp) * 1000
+    df['Strategy Cumulative Return'] = df['Strategy Return'].cumsum().apply(
+        np.exp) * 1000
+
+    return df[['Buy and Hold Cumulative Return', 'Strategy Cumulative Return']]
 
 
 if __name__ == "__main__":

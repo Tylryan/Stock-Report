@@ -14,6 +14,8 @@ A program that predicts asset prices of the user's choice and informs them when 
     - Classification (1s and 0s from Raquel's indicators)
         - *Use Stock prediction to then create predicted indicators.*
         - Make sure it's a good model
+            - Precision Recall Curve
+            - Show whether or not it's over or under sampled
             - Accuracy
             - Recall
             - Precision
