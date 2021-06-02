@@ -10,8 +10,12 @@ pd.set_option('display.width', None)
 ticker = 'BTC'
 
 
-start = datetime.date(2019, 4, 1)
-end = datetime.date(2021, 5, 27)
+start = datetime.date(2019, 12, 2)
+end = datetime.date(2021, 6, 2)
+interval = '1HRS'
+
+# Example intervals
+# SEC, MIN, HRS, DAY
 
 
 def get_close_data(
@@ -19,8 +23,9 @@ def get_close_data(
         start: datetime,
         end: datetime,
         api_key: str,
-        interval: int = '1DAY'
+        interval: str = '1HRS'
 ):
+
     # Date range of the request
     limit = str(end - start).split()[0]
     # Distance between ticks
@@ -51,14 +56,22 @@ def get_existing_data():
 if __name__ == '__main__':
     # API Request
 
-    # import read_config
-    # env_location = '../../Data/.env'
-    # user_name, password, crypto_api = read_config.export_variables(
-    #     env_location)
-    # df = get_close_data(ticker, start, end, crypto_api)
+    import read_config
+    env_location = '../../Data/.env'
+    user_name, password, crypto_api = read_config.export_variables(
+        env_location)
+    df = get_close_data(ticker, start, end, crypto_api)
+    df.set_index('Date', inplace=True)
+    df['Short'] = df.Close.rolling(window=24).mean()
+    df['Long'] = df.Close.rolling(window=96).mean()
+    df.plot(
+        title=f"{ticker} | {start}-{end} | interval {interval}",
+        figsize=(15, 7.5)
+    )
+    plt.show()
     # df.to_csv('test.csv', sep=',', index=False)
     # print(df)
 
-    # Messing with the data
-    df = get_existing_data()
-    print(df)
+    # # Messing with the data
+    # df = get_existing_data()
+    # print(df)
