@@ -10,7 +10,7 @@ import datetime
 from pprint import pprint
 from statsmodels.tsa.arima_model import ARIMA
 from stock_sources import long_period_df, only_close, returns, historic_cumulative_returns
-from new_crypto_data_collection import get_close_data
+from crypto_data_collection import get_close_data
 from sklearn.metrics import mean_squared_error
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -32,7 +32,6 @@ def arima_prediction(close_df, test_percent=0.8):
     ######################## OPTIMAL ORDER FOR TRAINING DATA #############
     best_order = []
 
-    # Here we are training on the data up until January 2021
     for d in range(1, 3):
         for q in range(1, 6):
             for p in range(1, 6):
@@ -114,17 +113,18 @@ if __name__ == '__main__':
     standard_returns = close_df.pct_change().dropna()
 
     arima_prediction(close_df)
+    print(close_df)
 
-    # print('\n\n\n\nCrypto Data')
-    ticker = 'BTC'
+    # # print('\n\n\n\nCrypto Data')
+    # ticker = 'BTC'
 
-    end = datetime.date.today()
-    start = end - datetime.timedelta(days=505)
+    # end = datetime.date.today()
+    # start = end - datetime.timedelta(days=505)
 
-    import read_config
-    env_location = '../../Data/.env'
-    user_name, password, crypto_api = read_config.export_variables(
-        env_location)
-    crypto_df = get_close_data(ticker, start, end, crypto_api)
+    # import read_config
+    # env_location = '../../Data/.env'
+    # user_name, password, crypto_api = read_config.export_variables(
+    #     env_location)
+    # crypto_df = get_close_data(ticker, start, end, crypto_api)
 
-    arima_prediction(crypto_df)
+    # arima_prediction(crypto_df)

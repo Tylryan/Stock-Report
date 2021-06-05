@@ -15,23 +15,25 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 
-ticker = 'GME'
+def random_walk_benchmark(close_df):
+
+    close_df['Predicted'] = close_df['Close'].shift(1)
+    close_df.dropna(inplace=True)
+
+    benchmark_mse = np.sqrt(mean_squared_error(
+        close_df['Close'],
+        close_df['Predicted'])
+    )
+    print(close_df.tail())
+    print(f"MSE: {benchmark_mse}")
+    return benchmark_mse
 
 
-def random_walk_benchmark(ticker):
+if __name__ == '__main__':
+    ticker = 'GME'
     # Creating the initial dataframe with a bunch of information
     df = long_period_df(ticker)
 
     # Chopping that dataframe down to Close only information
     close_df = only_close(df)
-
-    close_df['Predicted'] = close_df['Close'].shift(1)
-    close_df.dropna(inplace=True)
-
-    mse = np.sqrt(mean_squared_error(close_df['Close'], close_df['Predicted']))
-    print(close_df.tail())
-    print(f"MSE: {mse}")
-
-
-if __name__ == '__main__':
-    random_walk_benchmark(ticker)
+    benchmark_mse = random_walk_benchmark(df)
