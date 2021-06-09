@@ -2,6 +2,7 @@
 
 import yfinance as yf
 import pandas as pd
+import matplotlib.pyplot as plt
 from time import sleep
 import numpy as np
 
@@ -29,6 +30,17 @@ def short_period_df(ticker, period='60d', interval='1h', threads=True):
         threads=threads
     )
     return short_df
+
+
+def current_price(ticker, period='1', interval='5m', threads=True):
+    current_price_df = yf.download(
+        ticker,
+        period=period,
+        interval=interval,
+        threads=threads
+    )
+
+    return current_price_df['Close'].tail(1).to_frame()
 
 
 def only_close(df):
@@ -71,15 +83,28 @@ def historic_cumulative_returns(df):
     return df[['Buy and Hold Cumulative Return', 'Strategy Cumulative Return']]
 
 
+def save_image(df, title):
+    df.plot(
+        title=title,
+        figsize=(15, 7)
+    ).get_figure()
+
+    plt.savefig('./Email/stock_image.png')
+
+
 if __name__ == "__main__":
-    ticker = ['AAPL', 'TSLA']
+    # ticker = ['AAPL', 'TSLA']
+    ticker = 'AAPL'
 
-    long_df = long_period_df(ticker)
-    long_close = only_close(long_df)
-    short_df = short_period_df(ticker)
-    short_close = only_close(short_df)
+    # long_df = long_period_df(ticker)
+    # long_close = only_close(long_df)
+    # short_df = short_period_df(ticker)
+    # short_close = only_close(short_df)
+    # save_image(long_close, title='heller')
 
-    print(len(long_close))
+    cp = current_price(ticker)
+    print(cp)
+    # print(len(long_close))
     # print(f"\nThis is {ticker}'s 2y historical data\n")
     # print(long_df)
     # print(f"\nThis is {ticker}'s 2y historical data only close\n")

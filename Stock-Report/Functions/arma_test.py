@@ -42,7 +42,7 @@ def arima_prediction(close_df, test_percent=0.8):
 
                 # Fit the model and assign it to a variable called results
                 try:
-                    results = model.fit()
+                    results = model.fit(disp=0)
                 except Exception as e:
                     print(f"Error {e}")
                 # This is one of the performance indicators.
@@ -57,7 +57,7 @@ def arima_prediction(close_df, test_percent=0.8):
 
     ########################## TRAINING DATA ################################
     train_model = ARIMA(train, order=optimal_order)
-    train_results = train_model.fit()
+    train_results = train_model.fit(disp=0)
     train_forecast = pd.DataFrame(
         train_results.forecast(len(test))[0],
         columns=['Close']
@@ -85,18 +85,12 @@ def arima_prediction(close_df, test_percent=0.8):
     )
     # ########################### TESTING DATA #################################
     test_model = ARIMA(test, order=optimal_order)
-    test_results = test_model.fit()
+    test_results = test_model.fit(disp=0)
     test_forecast = pd.DataFrame(
         test_results.forecast(5)[0],
         columns=['Close']
     )
     test_predictions = test.append(test_forecast)
-    print(train_prediction_5_day)
-    print(f"MSE: { train_mse }")
-    print(test_predictions.tail(20))
-
-    print(f"Optimal Order: {optimal_order}")
-
     return train_mse, test_predictions
 
 
@@ -113,7 +107,6 @@ if __name__ == '__main__':
     standard_returns = close_df.pct_change().dropna()
 
     arima_prediction(close_df)
-    print(close_df)
 
     # # print('\n\n\n\nCrypto Data')
     # ticker = 'BTC'
