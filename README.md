@@ -19,7 +19,7 @@ This application is not meant for the user to use it all the time. It should jus
     - Password = your Gmail third party password.
 3. I would set this program to run automatically via a [cron job](https://phoenixnap.com/kb/set-up-cron-job-linux#:~:text=The%20Cron%20daemon%20is%20a,other%20commands%20to%20run%20automatically.)
 
-# Ichimocu Cloud Strategy
+# Ichimoku Cloud Strategy
 
 To build this strategy we use The Technical Analysis Library for Python, ta, and call the data for Tenakan-sen (trend-ichimoku-a) and Kinjun_sen (trend-ichimoku-b) to create the buy/sell signals for the crossover called 'trend_ichimoku':
 
