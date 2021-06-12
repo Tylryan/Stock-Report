@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import Functions.stock_sources as stock_sources
+import stock_sources
 import pandas as pd
 # You will need to create something that works for only one stock
 # I made it a set to remove duplicates
@@ -61,5 +61,6 @@ def stock_report(ticker):
 
 
 if __name__ == '__main__':
+    ticker = 'AAPL'
     ticker = {'AAPL', 'TSLA', 'PLUG', 'AMZN', 'AMZN', "LSD", "WPG"}
     print(stock_report(ticker))
