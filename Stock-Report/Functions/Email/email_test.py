@@ -1,20 +1,15 @@
 #!/usr/bin/python
+# from read_config import export_variables
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 import smtplib
 import sys
 
-sys.path.insert(
-    0, '/home/tyler/Documents/Coding/Stock-Report/Stock-Report/Functions')
-my_email = 'tlrrn5@gmail.com'
+sys.path.append('../')
 
 
-def send_email():
-    from read_config import export_variables
-    email, password, crypto_api = export_variables(
-        env_location='/home/tyler/Documents/Coding/Stock-Report/Data/.env')
-    print(password)
+def send_email(email, password):
     msg = MIMEMultipart()
 
     msg['From'] = email
@@ -28,6 +23,7 @@ def send_email():
             <h1>Stock/Crypto Report</h1>
             <p>This stock/crypto triggered this email.</p>
             <img src="cid:img1"
+            <img src="cid:img2"
             style = "width:250px;">
         </body>
     </html>
@@ -36,12 +32,18 @@ def send_email():
     msg.attach(MIMEText(body, "html"))
 
     file_image = open(
-        '/home/tyler/Documents/Coding/Stock-Report/Stock-Report/Functions/Email/stock_image.png', 'rb')
+        './Functions/Email/stock_image1.png', 'rb')
+    file_image2 = open(
+        './Functions/Email/stock_image2.png', 'rb')
     email_image = MIMEImage(file_image.read())
+    email_image2 = MIMEImage(file_image2.read())
     file_image.close()
+    file_image2.close()
 
     email_image.add_header("Content-ID", "<image1>")
+    email_image2.add_header("Content-ID", "<image2>")
     msg.attach(email_image)
+    msg.attach(email_image2)
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
@@ -53,4 +55,5 @@ def send_email():
 
 
 if __name__ == '__main__':
-    send_email()
+    # send_email()
+    pass

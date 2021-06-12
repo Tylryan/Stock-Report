@@ -10,7 +10,7 @@ env_location = '../../Data/.env'
 def export_variables(env_location='../Data/.env'):
     try:
         load_dotenv(env_location)
-        email = os.getenv('email')
+        email = os.getenv('EMAIL')
         password = os.getenv('PASSWORD')
         crypto_api = os.getenv('CRYPTO_API')
         return email, password, crypto_api

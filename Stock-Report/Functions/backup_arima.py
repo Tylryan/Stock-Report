@@ -25,43 +25,47 @@ def arima_prediction(close_df, test_percent=0.8):
     # Creating a train test split
     observances = len(close_df)
     # Train consists of the first 80% of the close df
-    train = close_df.iloc[:math.ceil(observances * test_percent), :]
+    train = close_df.iloc[:math.ceil(
+        observances * test_percent), :]
     # Test Consists of last 20% of the close df
-    test = close_df.iloc[math.ceil(observances * test_percent):, :]
+    test = close_df.iloc[math.ceil(
+        observances * test_percent):, :]
 
     ######################## OPTIMAL ORDER FOR TRAINING DATA #############
     best_order = []
 
     for d in range(1, 3):
-        for q in range(1, 6):
-            for p in range(1, 6):
+        for q in range(1, 4):
+            for p in range(1, 4):
                 order = (p, d, q)
                 # Using the Training data in this case to find the best order
                 model = ARIMA(
                     np.array(train), order=order)
 
                 # Fit the model and assign it to a variable called results
-                try:
-                    results = model.fit(disp=0)
-                except Exception as e:
-                    print(f"Error {e}")
+                results = model.fit()
                 # This is one of the performance indicators.
                 # The other one is MSE
                 aic = results.aic
                 order_results = (aic, order)
                 best_order.append(order_results)
 
+    print("Done Training")
     # Sort the orders by AIC and give me
     best_order = sorted(best_order)
     optimal_order = best_order[0][1]
+    second_best_order = best_order[1][1]
 
     ########################## TRAINING DATA ################################
     train_model = ARIMA(train, order=optimal_order)
-    train_results = train_model.fit(disp=0)
+
+    train_results = train_model.fit()
+
     train_forecast = pd.DataFrame(
         train_results.forecast(len(test))[0],
         columns=['Close']
     )
+    print(train_forecast)
 
     # Add the predicted returns to the actual returns dataframe
     train_predictions = train.append(train_forecast)
@@ -84,8 +88,16 @@ def arima_prediction(close_df, test_percent=0.8):
         train_prediction_5_day['Predicted Price'])
     )
     # ########################### TESTING DATA #################################
-    test_model = ARIMA(test, order=optimal_order)
-    test_results = test_model.fit(disp=0)
+    print("Starting Test")
+    try:
+        test_model = ARIMA(test, order=optimal_order)
+        test_results = test_model.fit()
+    except Exception as e:
+        print(e)
+    finally:
+        test_model = ARIMA(test, order=second_best_order)
+        test_results = test_model.fit()
+
     test_forecast = pd.DataFrame(
         test_results.forecast(5)[0],
         columns=['Close']
