@@ -13,7 +13,7 @@ from stock_sources import long_period_df, only_close, returns, historic_cumulati
 from crypto_data_collection import get_close_data
 from sklearn.metrics import mean_squared_error
 import warnings
-warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings('ignore')
 
 ######################## GETTING DATA ################################
 # Creating the initial dataframe with a bunch of information
@@ -104,7 +104,12 @@ def arima_prediction(close_df, test_percent=0.8):
 
     test_forecast = pd.DataFrame(
         test_results.forecast(5)[0],
-        columns=['Close']
+        columns=['Close'],
+        index=pd.date_range(
+            start=pd.to_datetime(test.index[-1]) + datetime.timedelta(1),
+            periods=5,
+            freq="D"
+        )
     )
 
     # Add the predicted returns to the actual returns dataframe
@@ -120,7 +125,6 @@ def arima_prediction(close_df, test_percent=0.8):
 
 if __name__ == '__main__':
 
-    print('\n\n\n\nSTOCK DATA')
     ticker = 'AAPL'
     df = long_period_df(ticker)
 

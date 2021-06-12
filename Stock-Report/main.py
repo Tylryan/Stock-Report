@@ -7,12 +7,14 @@ import pandas as pd
 import yfinance as yf
 import datetime
 from time import sleep
+import warnings
+warnings.filterwarnings('ignore')
 sys.path.append(
     './Functions/')
 
 
 # Tickers to watch
-stock_ticker = 'GOOGL'
+stock_ticker = 'GME'
 crypto_ticker = 'BTC'
 
 # Can be changed to a more desired location
@@ -40,18 +42,15 @@ def main():
     ####################### Stock Data ######################################
     stock_df = stock_sources.long_period_df(stock_ticker)
     stock_close_df = stock_sources.only_close(stock_df)
-    print(stock_close_df)
-
-    print("Stock Data Gathered")
 
     ####################### Stock Predictions ###############################
+    print("Training the Model")
     stock_train_prediction_mse, stock_prediction_df = arima_prediction(
         stock_close_df)
-    print("Stock Train Predictions Made")
 
     ###################### Stock Benchmark #################################
 
-    # stock_prediction_benchmark_mse = random_walk_benchmark(stock_close_df)
+    stock_prediction_benchmark_mse = random_walk_benchmark(stock_close_df)
 
     # stock_report = stock_report(stock_ticker)
     ####################### Crypto Data ####################################
@@ -93,12 +92,10 @@ def main():
 
     # DEFAULT
     stock_analysis_df = default_analysis(
-        stock_prediction_df, current_stock_price)
+        stock_prediction_df, current_stock_price).copy()
 
 #     crypto_default_analysis = default_analysis(
 #         crypto_prediction, current_crypto_price)
-
-    print("Starting Crypto Default Analysis")
 
     # Crypto Data probably will only show daily results
     # current_crypto_price = pd.DataFrame(crypto_close_df[-1])
@@ -123,13 +120,19 @@ def main():
     # ]
 
     # Stock Graphs
-    plot_dataframe(stock_ticker, stock_prediction_df)
-    plot_dataframe_zoomed(stock_ticker, stock_prediction_df)
+    plot_dataframe(stock_ticker, stock_analysis_df)
+    plot_dataframe_zoomed(stock_ticker, stock_analysis_df)
 
     # Crypto Graphs
     # plot_dataframe(crypto_ticker, crypto_prediction)
     # plot_dataframe_zoomed(crypto_ticker, crypto_prediction)
+
+    # SENDING THE ACTUAL EMAIL
     send_email(email, password)
+
+    print(stock_analysis_df)
+    print(f"Random Walk MSE: {stock_prediction_benchmark_mse}")
+    print(f"ARIMA Train MSE: {stock_train_prediction_mse}")
 
 
 if __name__ == "__main__":

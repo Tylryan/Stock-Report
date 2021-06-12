@@ -12,11 +12,12 @@ from sklearn.metrics import mean_squared_error
 import warnings
 
 
-warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore")
 
 
 def random_walk_benchmark(close_df):
 
+    close_df = pd.DataFrame(close_df[-5:])
     close_df['Predicted'] = close_df['Close'].shift(1)
     close_df.dropna(inplace=True)
 
@@ -24,16 +25,14 @@ def random_walk_benchmark(close_df):
         close_df['Close'],
         close_df['Predicted'])
     )
-    print(close_df.tail())
-    print(f"MSE: {benchmark_mse}")
     return benchmark_mse
 
 
 if __name__ == '__main__':
-    ticker = 'GME'
+    ticker = 'AAPL'
     # Creating the initial dataframe with a bunch of information
     df = long_period_df(ticker)
 
     # Chopping that dataframe down to Close only information
     close_df = only_close(df)
-    benchmark_mse = random_walk_benchmark(df)
+    benchmark_mse = random_walk_benchmark(close_df)
