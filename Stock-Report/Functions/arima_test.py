@@ -37,8 +37,8 @@ def arima_prediction(close_df, test_percent=0.8):
     best_order = []
 
     for d in range(0, 3):
-        for q in range(1, 4):
-            for p in range(1, 4):
+        for q in range(1, 5):
+            for p in range(1, 5):
                 order = (p, d, q)
                 # Using the Training data in this case to find the best order
                 model = ARIMA(

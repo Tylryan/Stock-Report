@@ -128,10 +128,12 @@ def main():
     # plot_dataframe_zoomed(crypto_ticker, crypto_prediction)
 
     # SENDING THE ACTUAL EMAIL
-    send_email(email, password)
+    # send_email(email, password)
 
-    print(stock_analysis_df)
-    print(f"Random Walk MSE: {stock_prediction_benchmark_mse}")
+    print(f'\nPredicted Prices and Moving Averages for {stock_ticker}\n')
+    print(stock_analysis_df.tail(10))
+    print("---------------------------------------------------------")
+    print(f"\nRandom Walk MSE: {stock_prediction_benchmark_mse}")
     print(f"ARIMA Train MSE: {stock_train_prediction_mse}")
 
 
