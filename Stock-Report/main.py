@@ -133,8 +133,8 @@ def main():
     print(f'\nPredicted Prices and Moving Averages for {stock_ticker}\n')
     print(stock_analysis_df.tail(10))
     print("---------------------------------------------------------")
-    print(f"\nRandom Walk MSE: {stock_prediction_benchmark_mse}")
-    print(f"ARIMA Train MSE: {stock_train_prediction_mse}")
+    print(f"\nRandom Walk RMSE: {stock_prediction_benchmark_mse}")
+    print(f"ARIMA Train RMSE: {stock_train_prediction_mse}")
 
 
 if __name__ == "__main__":
